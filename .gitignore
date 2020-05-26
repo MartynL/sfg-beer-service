@@ -1,0 +1,21 @@
+#############
+# Eclipse
+#############
+
+.project
+.metadata
+tmp/
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+local.properties
+.classpath
+.settings/
+.loadpath
+.factorypath
+/src/main/resources/rebel.xml
+/target
+target/* 
+/target/
+target/
