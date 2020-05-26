@@ -1,4 +1,6 @@
 # SFG-beer-service
 
+Example spring boot microservice for Beer. Learning spring cloud concepts from Udemy course (see below)
 
-Example spring boot microservice for Beer.
+Udemy course: Spring Boot Microservices with Spring Cloud Beginner to Guru
+Instructor: Spring Framework Guru
