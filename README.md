@@ -1,4 +1,4 @@
-#SFG-beer-service
+# SFG-beer-service
 
 
-#Example spring boot microservice for Beer.
+Example spring boot microservice for Beer.
