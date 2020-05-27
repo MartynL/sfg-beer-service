@@ -6,6 +6,7 @@ import java.net.URI;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +30,7 @@ public class BeerController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<BeerDto> saveNewBeer(@RequestBody BeerDto beerDto) {
+	public ResponseEntity<BeerDto> saveNewBeer(@Validated @RequestBody BeerDto beerDto) {
 		
 		//TODO impl 
 		return ResponseEntity.created(URI.create("/api/v1/beer" + beerDto.getId().toString())).build();
@@ -37,7 +38,7 @@ public class BeerController {
 
 	@PutMapping("/{beerId}")
 	@ResponseStatus(NO_CONTENT)
-	public void updateBeerById(@PathVariable UUID beerId, @RequestBody BeerDto beerDto) {
+	public void updateBeerById(@PathVariable UUID beerId, @Validated @RequestBody BeerDto beerDto) {
 		//TODO impl
 	}
 	
