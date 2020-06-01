@@ -24,16 +24,15 @@ import com.mlatta.beer.model.dto.BeerDto;
 public class BeerController {
 	
 	@GetMapping("/{beerId}")
-	public ResponseEntity<BeerDto> getBeerById(@PathVariable UUID beerID){
+	public ResponseEntity<BeerDto> getBeerById(@PathVariable UUID beerId){
 		//TODO impl
 		return ResponseEntity.ok(BeerDto.builder().build());
 	}
 	
 	@PostMapping
 	public ResponseEntity<BeerDto> saveNewBeer(@Validated @RequestBody BeerDto beerDto) {
-		
 		//TODO impl 
-		return ResponseEntity.created(URI.create("/api/v1/beer" + beerDto.getId().toString())).build();
+		return ResponseEntity.created(URI.create("/api/v1/beer" + UUID.randomUUID())).build();
 	}
 
 	@PutMapping("/{beerId}")
