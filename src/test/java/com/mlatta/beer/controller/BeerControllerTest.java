@@ -3,9 +3,13 @@ package com.mlatta.beer.controller;
 import static java.util.Optional.of;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
@@ -15,10 +19,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,8 +34,9 @@ import com.mlatta.beer.model.enums.BeerStyle;
 import com.mlatta.beer.repositories.BeerRepository;
 
 @WebMvcTest
-@ExtendWith(MockitoExtension.class)
+@AutoConfigureRestDocs
 @ComponentScan("com.mlatta.beer.model.mappers")
+@ExtendWith({MockitoExtension.class, RestDocumentationExtension.class})
 public class BeerControllerTest {
 
 	@Autowired MockMvc mockMvc;
@@ -43,8 +50,11 @@ public class BeerControllerTest {
 		when(beerRepository.findById(any())).thenReturn(of(Beer.builder().build()));
 		
 		mockMvc
-			.perform(get("/api/v1/beer/" + UUID.randomUUID().toString()).accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk());
+			.perform(get("/api/v1/beer/{beerId}", UUID.randomUUID().toString()).accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andDo(document("v1/beer", pathParameters(
+					parameterWithName("beerId").description("UUID of desired beer to get.")
+			)));
 	}
 
 	@Test
