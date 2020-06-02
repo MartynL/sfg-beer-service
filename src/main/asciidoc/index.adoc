@@ -48,6 +48,10 @@ Response Body:
 
 include::{snippets}/v1/beer/post/response-body.adoc[]
 
+Request Fields:
+
+include::{snippets}/v1/beer/post/request-fields.adoc[]
+
 Response Fields:
 
 include::{snippets}

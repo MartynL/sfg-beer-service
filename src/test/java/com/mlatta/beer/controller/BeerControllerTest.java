@@ -14,7 +14,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.restdocs.snippet.Attributes.key;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.util.StringUtils.collectionToDelimitedString;
 
@@ -42,8 +41,8 @@ import com.mlatta.beer.model.enums.BeerStyle;
 import com.mlatta.beer.repositories.BeerRepository;
 
 @WebMvcTest
-@AutoConfigureRestDocs(uriScheme = "https", uriHost = "dev.mlatta.example.com", uriPort = 80)
 @ComponentScan("com.mlatta.beer.model.mappers")
+@AutoConfigureRestDocs(uriScheme = "https", uriHost = "dev.mlatta.example.com", uriPort = 80)
 @ExtendWith({MockitoExtension.class, RestDocumentationExtension.class})
 public class BeerControllerTest {
 
