@@ -42,7 +42,7 @@ import com.mlatta.beer.model.enums.BeerStyle;
 import com.mlatta.beer.repositories.BeerRepository;
 
 @WebMvcTest
-@AutoConfigureRestDocs
+@AutoConfigureRestDocs(uriScheme = "https", uriHost = "dev.mlatta.example.com", uriPort = 80)
 @ComponentScan("com.mlatta.beer.model.mappers")
 @ExtendWith({MockitoExtension.class, RestDocumentationExtension.class})
 public class BeerControllerTest {
@@ -53,7 +53,7 @@ public class BeerControllerTest {
 	@MockBean BeerRepository beerRepository;
 
 	@Test
-	void testGetBeerById() throws Exception {
+	public void testGetBeerById() throws Exception {
 		
 		when(beerRepository.findById(any())).thenReturn(of(Beer.builder().build()));
 		
@@ -62,7 +62,7 @@ public class BeerControllerTest {
 				.param("isCold", "yes")
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andDo(document("v1/beer", 
+			.andDo(document("v1/beer/get", 
 				pathParameters(
 					parameterWithName("beerId").description("UUID of desired beer to get.")
 				),
@@ -84,7 +84,7 @@ public class BeerControllerTest {
 	}
 
 	@Test
-	void testSaveNewBeer() throws Exception {
+	public void testSaveNewBeer() throws Exception {
 		BeerDto beerDto = getValidBeerDto();
 		String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 		
@@ -95,7 +95,7 @@ public class BeerControllerTest {
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(beerDtoJson))
 			.andExpect(status().isCreated())
-			.andDo(document("v1/beer",
+			.andDo(document("v1/beer/post",
 					requestFields(
 							fields.withPath("id").ignored(),
 							fields.withPath("version").ignored(),
@@ -111,7 +111,7 @@ public class BeerControllerTest {
 	}
 
 	@Test
-	void testUpdateBeerById() throws Exception {
+	public void testUpdateBeerById() throws Exception {
 		BeerDto beerDto = getValidBeerDto();
 		String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 		
