@@ -45,9 +45,8 @@ public class BeerDto {
 	@NotNull
 	private BeerStyle beerStyle;
 	
-	@NotNull
-	@Positive
-	private Long upc;
+	@NotBlank
+	private String upc;
 	
 	@NotNull
 	@Positive

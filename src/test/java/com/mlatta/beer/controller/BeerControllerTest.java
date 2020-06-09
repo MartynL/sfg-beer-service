@@ -34,6 +34,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mlatta.beer.bootstrap.BeerLoader;
 import com.mlatta.beer.model.dto.BeerDto;
 import com.mlatta.beer.model.enums.BeerStyle;
 import com.mlatta.beer.service.BeerService;
@@ -127,7 +128,7 @@ public class BeerControllerTest {
 				.beerName("Test Beer")
 				.beerStyle(BeerStyle.ALE)
 				.price(new BigDecimal("2.99"))
-				.upc(123456789L)
+				.upc(BeerLoader.BEER_1_UPC)
 				.build();
 	}
 
