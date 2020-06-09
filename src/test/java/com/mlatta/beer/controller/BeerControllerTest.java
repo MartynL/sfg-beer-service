@@ -1,6 +1,5 @@
 package com.mlatta.beer.controller;
 
-import static java.util.Optional.of;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -35,10 +34,9 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mlatta.beer.domain.Beer;
 import com.mlatta.beer.model.dto.BeerDto;
 import com.mlatta.beer.model.enums.BeerStyle;
-import com.mlatta.beer.repositories.BeerRepository;
+import com.mlatta.beer.service.BeerService;
 
 @WebMvcTest
 @ComponentScan("com.mlatta.beer.model.mappers")
@@ -49,12 +47,12 @@ public class BeerControllerTest {
 	@Autowired MockMvc mockMvc;
 	@Autowired ObjectMapper objectMapper;
 	
-	@MockBean BeerRepository beerRepository;
+	@MockBean BeerService beerService;
 
 	@Test
 	public void testGetBeerById() throws Exception {
 		
-		when(beerRepository.findById(any())).thenReturn(of(Beer.builder().build()));
+		when(beerService.getById(any())).thenReturn(BeerDto.builder().build());
 		
 		mockMvc
 			.perform(get("/api/v1/beer/{beerId}", UUID.randomUUID().toString())
@@ -87,7 +85,11 @@ public class BeerControllerTest {
 		BeerDto beerDto = getValidBeerDto();
 		String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 		
+		beerDto.setId(UUID.randomUUID());
+		
 		ConstrainedFields fields = new ConstrainedFields(BeerDto.class);
+		
+		when(beerService.saveNewBeer(any())).thenReturn(beerDto);
 		
 		mockMvc
 			.perform(post("/api/v1/beer")

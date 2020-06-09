@@ -17,10 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mlatta.beer.domain.Beer;
+import com.mlatta.beer.exceptions.NotFoundException;
 import com.mlatta.beer.model.dto.BeerDto;
-import com.mlatta.beer.model.mappers.BeerMapper;
-import com.mlatta.beer.repositories.BeerRepository;
+import com.mlatta.beer.service.BeerService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,41 +28,32 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/beer")
 public class BeerController {
 	
-	private final BeerMapper beerMapper;
-	private final BeerRepository beerRepository;
+	private final BeerService beerService;
 	
 	@GetMapping("/{beerId}")
 	public ResponseEntity<BeerDto> getBeerById(@PathVariable UUID beerId){
-		BeerDto beer = beerMapper.beerToBeerDto(beerRepository.findById(beerId).orElse(Beer.builder().build()));
-		return ResponseEntity.ok(beer);
+		try {
+			return ResponseEntity.ok(beerService.getById(beerId));
+		} catch (NotFoundException e) {
+			return ResponseEntity.notFound().build();
+		}
 	}
 	
 	@PostMapping
 	public ResponseEntity<BeerDto> saveNewBeer(@Validated @RequestBody BeerDto beerDto) {
-		beerRepository.save(beerMapper.beerDtoToBeer(beerDto));
-		return ResponseEntity.created(URI.create("/api/v1/beer")).build();
+		BeerDto savedBeer = beerService.saveNewBeer(beerDto);
+		return ResponseEntity.created(URI.create("/api/v1/beer/" + savedBeer.getId())).build();
 	}
 
 	@PutMapping("/{beerId}")
 	@ResponseStatus(NO_CONTENT)
-	public void updateBeerById(@PathVariable UUID beerId, @Validated @RequestBody BeerDto beerDto) {
-		
-		beerRepository
-			.findById(beerId)
-			.ifPresent(b -> {
-				b.setBeerName(beerDto.getBeerName());
-				b.setBeerStyle(beerDto.getBeerStyle().toString());
-				b.setPrice(beerDto.getPrice());
-				b.setUpc(beerDto.getUpc());
-				
-				beerRepository.save(b);
-			});
-		
+	public void updateBeerById(@PathVariable UUID beerId, @Validated @RequestBody BeerDto beerDto) throws NotFoundException {
+		beerService.updateBeer(beerId, beerDto);
 	}
 	
 	@DeleteMapping("/{beerId}")
 	@ResponseStatus(NO_CONTENT)
 	public void deleteBeerById(@PathVariable UUID beerId) {
-		beerRepository.deleteById(beerId);
+		beerService.deleteBeer(beerId);
 	}
 }
