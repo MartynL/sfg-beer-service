@@ -10,7 +10,7 @@ import com.mlatta.beer.repositories.BeerRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@Component
+//@Component
 @RequiredArgsConstructor
 public class BeerLoader implements CommandLineRunner {
 
