@@ -1,12 +1,18 @@
 package com.mlatta.beer.service.impl;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.mlatta.beer.domain.Beer;
 import com.mlatta.beer.exceptions.NotFoundException;
+import com.mlatta.beer.model.BeerPagedList;
 import com.mlatta.beer.model.dto.BeerDto;
+import com.mlatta.beer.model.enums.BeerStyle;
 import com.mlatta.beer.model.mappers.BeerMapper;
 import com.mlatta.beer.repositories.BeerRepository;
 import com.mlatta.beer.service.BeerService;
@@ -51,6 +57,32 @@ public class BeerServiceImpl implements BeerService {
 	@Override
 	public void deleteBeer(UUID beerId) {
 		beerRepository.deleteById(beerId);
+	}
+
+	@Override
+	public BeerPagedList listBeers(String beerName, BeerStyle beerStyle, PageRequest pageRequest) {
+		
+		Page<Beer> beerPage;
+		
+		if(!StringUtils.isEmpty(beerName) && !StringUtils.isEmpty(beerStyle)) {
+			beerPage = beerRepository.findAllByBeerNameAndBeerStyle(beerName, beerStyle, pageRequest);
+		} else if(!StringUtils.isEmpty(beerName) && StringUtils.isEmpty(beerStyle)) {
+			beerPage = beerRepository.findAllByBeerName(beerName, pageRequest);
+		} else if(StringUtils.isEmpty(beerName) && !StringUtils.isEmpty(beerStyle)) {
+			beerPage = beerRepository.findAllByBeerStyle(beerStyle, pageRequest);
+		} else {
+			beerPage = beerRepository.findAll(pageRequest);
+		}
+		
+		return new BeerPagedList(
+				beerPage
+					.getContent()
+					.stream()
+					.map(beerMapper::beerToBeerDto)
+					.collect(Collectors.toList()),
+				PageRequest
+					.of(beerPage.getPageable().getPageNumber(), beerPage.getPageable().getPageSize()),
+				beerPage.getTotalElements());
 	}
 
 }
