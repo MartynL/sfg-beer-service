@@ -3,6 +3,7 @@ package com.mlatta.beer.service.impl;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class BeerServiceImpl implements BeerService {
 	}
 
 	@Override
+	@Cacheable(cacheNames = "beerCache", key="#beerId", condition="#showInventoryOnHand == false")
 	public BeerDto getById(UUID beerId, boolean showInventoryOnHand) throws NotFoundException {
 		Beer beer = beerRepository.findById(beerId).orElseThrow(NotFoundException::new);
 		return beerMapper.beerToBeerDto(beer, showInventoryOnHand);
@@ -59,6 +61,7 @@ public class BeerServiceImpl implements BeerService {
 	}
 
 	@Override
+	@Cacheable(cacheNames = "beerListCache", condition="#showInventoryOnHand == false")
 	public BeerPagedList listBeers(String beerName, BeerStyle beerStyle, PageRequest pageRequest, boolean showInventoryOnHand) {
 		
 		Page<Beer> beerPage;
