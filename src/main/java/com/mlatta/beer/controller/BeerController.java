@@ -42,7 +42,8 @@ public class BeerController {
 			@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "beerName", required = false) String beerName,
-			@RequestParam(value = "beerStyle", required = false) BeerStyle beerStyle) {
+			@RequestParam(value = "beerStyle", required = false) BeerStyle beerStyle,
+			@RequestParam(value = "showInventoryOnHand", defaultValue = "false") boolean showInventoryOnHand) {
 		
 		if(pageNumber == null || pageNumber < 0) {
 			pageNumber = DEFAULT_PAGE_NUMBER;
@@ -52,16 +53,17 @@ public class BeerController {
 			pageSize = DEFAULT_PAGE_SIZE;
 		}
 		
-		BeerPagedList beerList = beerService.listBeers(beerName, beerStyle, PageRequest.of(pageNumber, pageSize));
+		BeerPagedList beerList = beerService.listBeers(beerName, beerStyle, PageRequest.of(pageNumber, pageSize), showInventoryOnHand);
 		
 		return ResponseEntity.ok(beerList);
 	}
 	
 	
 	@GetMapping("/{beerId}")
-	public ResponseEntity<BeerDto> getBeerById(@PathVariable UUID beerId){
+	public ResponseEntity<BeerDto> getBeerById(@PathVariable UUID beerId,
+			@RequestParam(value = "showInventoryOnHand", defaultValue = "false") boolean showInventoryOnHand){
 		try {
-			return ResponseEntity.ok(beerService.getById(beerId));
+			return ResponseEntity.ok(beerService.getById(beerId, showInventoryOnHand));
 		} catch (NotFoundException e) {
 			return ResponseEntity.notFound().build();
 		}

@@ -12,5 +12,6 @@ public interface BeerMapper {
 
 	public BeerDto beerToBeerDto(Beer beer);
 	public Beer beerDtoToBeer(BeerDto beerDto);
+	public BeerDto beerToBeerDto(Beer beer, boolean showInventoryOnHand);
 	
 }

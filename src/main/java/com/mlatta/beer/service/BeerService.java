@@ -11,7 +11,7 @@ import com.mlatta.beer.model.enums.BeerStyle;
 
 public interface BeerService {
 
-	public BeerDto getById(UUID beerId) throws NotFoundException;
+	public BeerDto getById(UUID beerId, boolean showInventoryOnHand) throws NotFoundException;
 
 	public BeerDto saveNewBeer(BeerDto beerDto);
 
@@ -19,6 +19,6 @@ public interface BeerService {
 
 	public void deleteBeer(UUID beerId);
 
-	public BeerPagedList listBeers(String beerName, BeerStyle beerStyle, PageRequest pageRequest);
+	public BeerPagedList listBeers(String beerName, BeerStyle beerStyle, PageRequest pageRequest, boolean showInventoryOnHand);
 
 }
