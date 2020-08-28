@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/beer")
+@RequestMapping("/api/v1/")
 public class BeerController {
 	
 	private static final Integer DEFAULT_PAGE_SIZE = 25;
@@ -37,7 +37,7 @@ public class BeerController {
 	
 	private final BeerService beerService;
 	
-	@GetMapping(produces="application/json")
+	@GetMapping(path="beer", produces="application/json")
 	public ResponseEntity<BeerPagedList> listBeers(
 			@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -59,7 +59,7 @@ public class BeerController {
 	}
 	
 	
-	@GetMapping("/{beerId}")
+	@GetMapping("beer/{beerId}")
 	public ResponseEntity<BeerDto> getBeerById(@PathVariable UUID beerId,
 			@RequestParam(value = "showInventoryOnHand", defaultValue = "false") boolean showInventoryOnHand){
 		try {
@@ -69,19 +69,28 @@ public class BeerController {
 		}
 	}
 	
-	@PostMapping
+	@GetMapping("beerUpc/{upc}")
+	public ResponseEntity<BeerDto> getBeerByUpc(@PathVariable String upc){
+		try {
+			return ResponseEntity.ok(beerService.getByUpc(upc));
+		} catch (NotFoundException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@PostMapping("beer/")
 	public ResponseEntity<BeerDto> saveNewBeer(@Validated @RequestBody BeerDto beerDto) {
 		BeerDto savedBeer = beerService.saveNewBeer(beerDto);
 		return ResponseEntity.created(URI.create("/api/v1/beer/" + savedBeer.getId())).build();
 	}
 
-	@PutMapping("/{beerId}")
+	@PutMapping("beer/{beerId}")
 	@ResponseStatus(NO_CONTENT)
 	public void updateBeerById(@PathVariable UUID beerId, @Validated @RequestBody BeerDto beerDto) throws NotFoundException {
 		beerService.updateBeer(beerId, beerDto);
 	}
 	
-	@DeleteMapping("/{beerId}")
+	@DeleteMapping("beer/{beerId}")
 	@ResponseStatus(NO_CONTENT)
 	public void deleteBeerById(@PathVariable UUID beerId) {
 		beerService.deleteBeer(beerId);

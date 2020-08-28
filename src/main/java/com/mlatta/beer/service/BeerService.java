@@ -21,4 +21,6 @@ public interface BeerService {
 
 	public BeerPagedList listBeers(String beerName, BeerStyle beerStyle, PageRequest pageRequest, boolean showInventoryOnHand);
 
+	public BeerDto getByUpc(String upc) throws NotFoundException;
+
 }
