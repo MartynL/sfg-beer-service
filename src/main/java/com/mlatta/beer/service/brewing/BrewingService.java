@@ -1,4 +1,4 @@
-package com.mlatta.beer.service;
+package com.mlatta.beer.service.brewing;
 
 import java.util.List;
 
